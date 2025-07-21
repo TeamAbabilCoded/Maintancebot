@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin - Fluxion Faucet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background-color: #1e293b;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #3b82f6;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #3b82f6;
+    }
+
+    input[type=password],
+    input[type=submit] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    input[type=password] {
+      background-color: #0f172a;
+      color: white;
+    }
+
+    input[type=submit] {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .error {
+      background-color: #dc2626;
+      color: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 13px;
+      color: #64748b;
+    }
+  </style>
+  <script>
+    {% if success %}
+      setTimeout(() => {
+        window.location.href = "/dashboard-admin"; // auto reload if login ok
+      }, 800);
+    {% endif %}
+  </script>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login Admin</h2>
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+      <input type="password" name="password" placeholder="Masukkan Password Admin" required>
+      <input type="submit" value="Masuk">
+    </form>
+  </div>
+  <footer>&copy; Fluxion Faucet 2025</footer>
+</body>
+</html>

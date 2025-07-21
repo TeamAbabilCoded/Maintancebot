@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard Admin - Fluxion Faucet</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f172a;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e293b;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #3b82f6;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ea5e9;
+      text-align: center;
+    }
+
+    .card h3 {
+      margin: 0;
+      color: #3b82f6;
+    }
+
+    .card p {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0 0 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+
+    th {
+      background-color: #0f172a;
+      color: #3b82f6;
+    }
+
+    tr:hover {
+      background-color: #334155;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn-accept {
+      background-color: #10b981;
+    }
+
+    .btn-reject {
+      background-color: #ef4444;
+    }
+
+    .message-box {
+      background-color: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .message-box h3 {
+      color: #3b82f6;
+      margin-bottom: 10px;
+    }
+
+    .message-box textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      resize: none;
+      background-color: #0f172a;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .message-box input[type=submit] {
+      background-color: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: #94a3b8;
+      font-size: 14px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fluxion Faucet Admin Panel</h1>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="card">
+        <h3>?? Total User</h3>
+        <p>{{ data.values() | map('int', default=0) | reject('equalto', 0) | sum }}</p>
+      </div>
+      <div class="card">
+        <h3>?? Total Poin</h3>
+        <p>{{ data.values() | sum }}</p>
+      </div>
+      <div class="card">
+        <h3>?? Penarikan</h3>
+        <p>{{ penarikan.values() | map(attribute='_len_') | sum }}</p>
+      </div>
+      <div class="card">
+        <h3>?? Verifikasi</h3>
+        <p>{{ verifikasi|length }}</p>
+      </div>
+    </div>
+
+    <h2>?? Permintaan Penarikan</h2>
+    {% if penarikan %}
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Metode</th>
+          <th>Nomor</th>
+          <th>Jumlah</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for uid, items in penarikan.items() %}
+          {% for item in items %}
+          <tr>
+            <td>{{ uid }}</td>
+            <td>{{ item.metode }}</td>
+            <td>{{ item.nomor }}</td>
+            <td>{{ item.amount }}</td>
+            <td>
+              <a href="/approve/{{ uid }}/{{ item.amount }}" class="btn btn-accept">?</a>
+              <a href="/reject/{{ uid }}/{{ item.amount }}" class="btn btn-reject">?</a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>Tidak ada permintaan penarikan saat ini.</p>
+    {% endif %}
+
+    <div class="message-box">
+      <h3>?? Kirim Pesan ke Semua User</h3>
+      <form method="post" action="/broadcast">
+        <textarea name="pesan" placeholder="Tulis pesan di sini..." required></textarea>
+        <input type="submit" value="Kirim Pesan">
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    &copy; Fluxion Faucet 2025
+  </footer>
+</body>
+</html>
